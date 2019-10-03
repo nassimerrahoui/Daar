@@ -2,8 +2,10 @@ package TME3;
 
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Indexing {
 	
@@ -20,8 +23,12 @@ public class Indexing {
 	public static HashMap<String, ArrayList<Point>> sorted_mots = new LinkedHashMap<String, ArrayList<Point>>(); 
 	
 	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println(" >> Please enter a filename from resources file : ");
+		String filename = sc.next();
+		sc.close();
 		try {
-			read("resources/t");	        
+			read("resources/"+filename);	        
 	        
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -43,46 +50,60 @@ public class Indexing {
 				}
 				
 				String word_line[] = line.trim().split("\\s*[^1-9a-zA-Z'-]+\\s*");
-				int indice = 0;
 				for (int i=0; i<word_line.length; i++) {
 					
 					int[] retenues = Match.retenues(word_line[i].toCharArray());
-					int n = Match.matchingAlgo(word_line[i].toCharArray(), retenues, line.toCharArray(), indice);
+					int n = Match.matchingAlgo(word_line[i].toCharArray(), retenues, line.toCharArray());
 					for(int j = 0; j< word_line[i].length(); j++) {
 						line = line.substring(0,j+n)+' '+ line.substring(j+n+1);
 					}
-					System.out.println(word_line[i] + " : "+n);
+					//System.out.println(word_line[i] + " : "+n);
 					
+					// n+1 car dans le fichier les positions commencent de 1 et pas de 0.
 					if (mots.containsKey(word_line[i])) {
-						mots.get(word_line[i]).add(new Point(line_number,n));
+						mots.get(word_line[i]).add(new Point(line_number,n+1));
 					}else {
 						mots.put(word_line[i], new ArrayList<>());
-						mots.get(word_line[i]).add(new Point(line_number,n));
+						mots.get(word_line[i]).add(new Point(line_number,n+1));
 					}
 						
 				}
-				System.out.println("ok");
 				line_number++;
 			}
-				
-			System.out.println("*************** Map non trie **************");
-			for (String key : mots.keySet()) {
-				System.out.print(key + " : ");
-				for (Point p : mots.get(key)) {
-					System.out.print(p + "| ");
-				}
-				System.out.println();
-			}
+
+			// DEBUG MODE
 			
-			System.out.println("*************** Map trie **************");
+//			System.out.println("*************** Map non trie **************");
+//			for (String key : mots.keySet()) {
+//				System.out.print(key + " : ");
+//				for (Point p : mots.get(key)) {
+//					System.out.print(p + "| ");
+//				}
+//				System.out.println();
+//			}
+//			
+//			System.out.println("*************** Map trie **************");
+//			sorted_mots = sortByFrequence(mots);
+//	        for (String key : sorted_mots.keySet()) {
+//				System.out.print(key + " : ");
+//				for (Point p : sorted_mots.get(key)) {
+//					System.out.print(p + "| ");
+//				}
+//				System.out.println();
+//			}
+			
+			FileWriter w = new FileWriter("result/index_table.txt");
+			BufferedWriter bw = new BufferedWriter(w);
 			sorted_mots = sortByFrequence(mots);
 	        for (String key : sorted_mots.keySet()) {
-				System.out.print(key + " : ");
+				bw.write(key + " : ");
 				for (Point p : sorted_mots.get(key)) {
-					System.out.print(p + "| ");
+					bw.write("(" + p.x + "," + p.y + ") | ");
 				}
-				System.out.println();
+				bw.newLine();
 			}
+	        bw.close();
+	        w.close();
 		}
 	}
 	
@@ -101,9 +122,11 @@ public class Indexing {
             { 
             	if (o1.getValue().size() < o2.getValue().size()) {
                     return -1;
-                } else {
+                } else if(o1.getValue().size() > o2.getValue().size()) {
                     return 1;
-                } 
+                } else {
+                	return 0;
+                }
             }
         }); 
         

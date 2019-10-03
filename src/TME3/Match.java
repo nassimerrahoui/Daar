@@ -2,7 +2,7 @@ package TME3;
 
 public class Match {
 
-	public static int matchingAlgo(char[] facteur, int[] retenue, char[] texte, int indice) {
+	public static int matchingAlgo(char[] facteur, int[] retenue, char[] texte) {
 		int i = 0;
 		int j = 0;
 
