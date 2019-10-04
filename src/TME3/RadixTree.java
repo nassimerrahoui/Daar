@@ -73,6 +73,7 @@ public class RadixTree {
 		t.addRadixTree("RAA");
 		t.addRadixTree("RAT");
 		t.addRadixTree("RATATATATATATATATA");
+		
 		t.affichage("", 0);
 		
 	}
