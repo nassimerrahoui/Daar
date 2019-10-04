@@ -291,7 +291,8 @@ public class Automate {
 										if (!mots.containsKey(line_number)) {
 											mots.put(line_number, new ArrayList<>());
 										}
-										mots.get(line_number).add(word_line[m]);
+										//mots.get(line_number).add(word_line[m]);
+										mots.get(line_number).add(line);
 										break;
 									}
 								}

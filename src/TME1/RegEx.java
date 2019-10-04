@@ -60,7 +60,7 @@ public class RegEx {
 
 				System.out.println("*************Grep****************");
 				
-				a.afficher_grep(a.custom_grep("resources/t"));
+				a.afficher_grep(a.custom_grep("resources/babylonia.txt"));
 				
 			} catch (Exception e) {
 				System.err.println("  >> ERROR: syntax error for regEx \"" + regEx + "\".");
