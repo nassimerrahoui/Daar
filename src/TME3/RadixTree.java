@@ -164,7 +164,7 @@ public boolean searchMotif(String mot, String suffixe, String temoin) {
 		if (present)
 			System.out.println(mot + " est present");
 		else
-			System.out.println(" est non present");
+			System.out.println(mot + " est non present");
 	}
 	
 }
