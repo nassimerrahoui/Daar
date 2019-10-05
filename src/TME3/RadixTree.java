@@ -3,6 +3,7 @@ package TME3;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class RadixTree {
 	
@@ -91,6 +92,44 @@ public class RadixTree {
 		}
 	}
 	
+public boolean searchMotif(String mot, String suffixe, String temoin) {
+		
+		boolean trouve = false;
+
+		if (suffixe == "") {
+			temoin = "";
+			suffixe = mot;
+		}
+
+		for (String key : fils.keySet()) {
+			char[] lettres = key.toCharArray();
+			char[] suffixe_array = suffixe.toCharArray();
+			int bon_char = 0;
+
+			for (int i = 0; i < lettres.length; i++) {
+				if(!suffixe.isEmpty()) {
+					if (lettres[i] == suffixe_array[i]) {
+						bon_char++;
+					}
+				}
+
+				if (Objects.equals(temoin,mot) && this.isWord) {
+					trouve = true;
+					break;
+				}
+				if (bon_char == lettres.length) {
+					temoin += suffixe.substring(0,lettres.length);
+					suffixe = suffixe.substring(lettres.length);
+					trouve = fils.get(key).searchMotif(mot, suffixe, temoin);
+					break;
+				}
+			}
+			if(trouve)
+				break;
+		}
+		return trouve;
+	}
+	
 	public static void main(String[] args) {
 //		RadixTree t = new RadixTree();
 //		t.addRadixTree("RATATA", null);
@@ -119,6 +158,13 @@ public class RadixTree {
 		o.addRadixTree("R", null);
 		o.addRadixTree("T", null);
 		o.affichage("", 0);
+		
+		String mot = "RA";
+		boolean present = o.searchMotif(mot, "", "");
+		if (present)
+			System.out.println(mot + " est present");
+		else
+			System.out.println(" est non present");
 	}
 	
 }
