@@ -1,6 +1,9 @@
 package TME3;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -10,6 +13,25 @@ public class RadixTree {
 	HashMap<String, RadixTree> fils = new HashMap<String, RadixTree>();
 	ArrayList<Point> occurences = new ArrayList<Point>();
 	boolean isWord = true;
+	
+	/** Constructeur par defaut **/
+	public RadixTree() {}
+	
+	/** Construction a partir d'un index **/
+	public RadixTree(String index) throws IOException {
+		String line = "";
+
+		try (BufferedReader br = new BufferedReader(new FileReader(index))) {
+			while ((line = br.readLine()) != null) {
+				if (line.isEmpty()) {
+					continue;
+				}
+				
+				/** TO DO **/
+				/** Garder les positions des mots dans le radix tree **/
+			}
+		}
+	}
 
 	public void addRadixTree(String mot, Point pos) {
 		boolean creer_fils = true;

@@ -36,12 +36,6 @@ public class Indexing {
 			e.printStackTrace();
 		}
 		System.out.println("Fin indexing...");
-
-		/** TODO recherche du motif **/
-		// System.out.println(" >> Please enter regex : ");
-		// String motif = sc.next();
-		// 
-		// sc.close();
 	}
 
 	public static void read(String filename) throws FileNotFoundException, IOException {
