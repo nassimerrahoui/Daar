@@ -68,8 +68,6 @@ public class RadixTree {
 					RadixTree u = new RadixTree();
 					u.fils = fils.get(key).fils;
 					u.occurences = fils.get(key).occurences;
-					//u.isWord = false;
-					
 					
 					t.fils.put(key.substring(bon_char), u);
 					t.occurences = fils.get(key).occurences;

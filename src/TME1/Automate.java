@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class Automate {
 	int[][] transition;
@@ -312,7 +314,11 @@ public class Automate {
 	}
 
 	public void afficher_grep(HashMap<Integer, ArrayList<String>> results) {
-		results.forEach((key, value) -> System.out.println("ligne " + key + " : " + value));
+		Map<Integer, ArrayList<String>> map = new TreeMap<>(results);
+		for(Integer i : map.keySet()) {
+			System.out.println("ligne "+ Integer.sum(i, 1) + " : " + map.get(i));
+		}
+//		results.forEach((key, value) -> System.out.println("ligne " + key + " : " + value));
 		System.out.println("Size : " + results.size());
 	}
 
