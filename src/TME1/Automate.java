@@ -33,7 +33,7 @@ public class Automate {
 				transition[i][j] = -1;
 
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
-
+		
 	}
 
 	public int remplir(RegExTree t, int id) {
@@ -241,17 +241,29 @@ public class Automate {
 	}
 
 	public boolean matching(String mot, int index, Set<Integer> key_etat) {
+		System.out.println("matching 1");
 		for (Iterator<Integer> it = key_etat.iterator(); it.hasNext();) {
 			int i = it.next();
 			if (sorties[i])
 				return true;
 		}
 		
+		System.out.println("matching 4");
+		System.out.println(key_etat);
+		System.out.println(index);
+		System.out.println(mot);
+		System.out.println(mot.length());
+		System.out.println(mot.charAt(2));
 		if (index >= mot.length() || etats.get(key_etat)[mot.charAt(index)] == null)
 			return false;
+		
+		System.out.println("matching 6");
+		
 		if (etats.get(key_etat)[mot.charAt(index)] != null) {
 			return matching(mot, index+1, etats.get(key_etat)[mot.charAt(index)]);
 		}
+		
+		System.out.println("matching 7");
 		return false;
 	}
 
@@ -282,26 +294,33 @@ public class Automate {
 
 					// on compare la lettre et la transition
 					boolean result_matching = false;
-
+					System.out.println(word_line[m]);
 					for (Set<Integer> keys : etats.keySet()) {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
+								System.out.println("ok1");
 								if (entrees[etat]) {
+									System.out.println("ok2");
 									if (matching(word_line[m], 0, keys)) {
 										result_matching = true;
+										System.out.println("ok3");
 										if (!mots.containsKey(line_number)) {
+											System.out.println("ok4");
 											mots.put(line_number, new ArrayList<>());
 										}
+										System.out.println("ok5");
 										//mots.get(line_number).add(word_line[m]);
 										mots.get(line_number).add(line);
 										break;
 									}
+									System.out.println("ok6");
 								}
 
 							}
 						}
 					}
+					System.out.println(word_line[m] + " ok");
 
 				}
 				line_number++;

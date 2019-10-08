@@ -21,6 +21,7 @@ public class RegEx {
 	// CONSTRUCTOR
 	public RegEx() {
 	}
+	
 
 	// MAIN
 	public static void main(String arg[]) {
@@ -50,17 +51,19 @@ public class RegEx {
 				
 				Automate a = new Automate(ret);
 				a.remplir(ret, 0);
-				a.afficher();
+				
+				/*a.afficher();
 				
 				System.out.println("********Determinisation**********");
-				
+				*/
 				a.determiniser();
-				a.afficher_determinisation();
+				
+				//a.afficher_determinisation();
 				
 
 				System.out.println("*************Grep****************");
 				
-				a.afficher_grep(a.custom_grep("resources/dracula.txt"));
+				a.afficher_grep(a.custom_grep("resources/babylonia.txt"));
 				
 			} catch (Exception e) {
 				System.err.println("  >> ERROR: syntax error for regEx \"" + regEx + "\".");
