@@ -46,8 +46,9 @@ public class RadixTree {
 			int bon_char = 0;
 
 			if (mot.equals(key)) {
-				isWord = true;
-				/*fils.get(key).*/occurences.addAll(pos);
+				System.out.println("ok 0");
+				fils.get(key).isWord = true;
+				fils.get(key).occurences = pos;
 				return;
 			}
 
@@ -66,7 +67,9 @@ public class RadixTree {
 					
 					RadixTree u = new RadixTree();
 					u.fils = fils.get(key).fils;
-					u.isWord = false;
+					u.occurences = fils.get(key).occurences;
+					//u.isWord = false;
+					
 					
 					t.fils.put(key.substring(bon_char), u);
 					t.occurences = fils.get(key).occurences;
@@ -77,7 +80,7 @@ public class RadixTree {
 					t.fils.put(mot.substring(bon_char), v);
 					
 					fils.put(key.substring(0, bon_char), t);
-					fils.get(key.substring(0, bon_char)).isWord = false;
+					//fils.get(key.substring(0, bon_char)).isWord = false;
 					
 					k = mot.substring(bon_char);
 					cle = key.substring(0, bon_char);
@@ -121,6 +124,7 @@ public class RadixTree {
 			
 		} else {
 			System.out.println("ok 5 ");
+			System.out.println("suffixe = " + suffixe);
 			fils.get(k).addRadixTree(suffixe, pos);
 		}
 
@@ -213,25 +217,20 @@ public class RadixTree {
 		RadixTree t = new RadixTree();
 		t.addRadixTree("RATATA", ligne0);
 		t.addRadixTree("RAT", ligne4);
-		
-		t.affichage("", 0);
-		
 		t.addRadixTree("RAA", ligne3);
-		
 		t.addRadixTree("RAA", ligne3);
-		
-		t.affichage("", 0);
-		
 		t.addRadixTree("RA", ligne1);
 		t.addRadixTree("R", ligne2);
 		t.addRadixTree("T", ligne5);
 		
 		t.affichage("", 0);
+		
+		
 
 //		RadixTree r = new RadixTree();
-//		r.addRadixTree("RATON", null);
-//		r.addRadixTree("RATIR", null);
-//		r.addRadixTree("RA", null);
+//		r.addRadixTree("RATON", ligne4);
+//		r.addRadixTree("RATIR", ligne3);
+//		r.addRadixTree("RA", ligne0);
 //		r.affichage("", 0);
 
 //		RadixTree o = new RadixTree();
@@ -239,7 +238,7 @@ public class RadixTree {
 //		o.addRadixTree("R", ligne2);
 //		o.addRadixTree("T", ligne1);
 //		o.affichage("", 0);
-//
+
 //		System.out.println();
 //		String mot = "RA";
 //		boolean present = o.searchMotif(mot, "", "");
