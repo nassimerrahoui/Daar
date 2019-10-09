@@ -41,6 +41,7 @@ public class Automate {
 		int[] id_droite;
 
 		if (t.root == RegEx.CONCAT) {
+			System.out.println("DEBUT CONCATENATION");
 			int[]res = new int[2];
 			res[0]= id;
 			id_gauche = remplir2(t.subTrees.get(0), id);
@@ -53,24 +54,22 @@ public class Automate {
 			sorties[id_gauche[1]] = false;
 			entrees[id_gauche[1] + 1] = false;
 			entrees[id_droite[1] - 1] = false;
-
+			System.out.println("FIN CONCATENATION");
 			return res;
 
 		} else if (t.root == RegEx.DOT) {
-			int[]res = new int[2];
+			System.out.println("DEBUT DOT");
+			int[]res= new int[2];
 			res[0]= id;
 			
-			id_gauche = remplir2(t.subTrees.get(0), id);
-			id_droite = remplir2(t.subTrees.get(1), id_gauche[1] + 1);
-			
-			res[1]=id_droite[1];
-			
-			epsilon[id_gauche[1]][id_droite[1] - 1] = true;
-
-			sorties[id_gauche[1]] = false;
-			entrees[id_gauche[1] + 1] = false;
-			entrees[id_droite[1] - 1] = false;
-
+			entrees[id] = true;
+			int incr = id+1;
+			for (int i=0; i<256; i++)
+				transition[id][i] = incr;
+			id++;
+			sorties[id] = true;
+			res[1]= id;
+			System.out.println("FIN DOT");
 			return res;
 
 		} else if (t.root == RegEx.ALTERN) {
@@ -142,88 +141,7 @@ public class Automate {
 
 	}
 
-	public int remplir(RegExTree t, int id) {
-		int id_gauche;
-		int id_droite;
-
-		if (t.root == RegEx.CONCAT) {
-			id_gauche = remplir(t.subTrees.get(0), id);
-			id_droite = remplir(t.subTrees.get(1), id_gauche + 1);
-
-			epsilon[id_gauche][id_droite - 1] = true;
-
-			sorties[id_gauche] = false;
-			entrees[id_gauche + 1] = false;
-			entrees[id_droite - 1] = false;
-
-			return id_droite;
-
-		} else if (t.root == RegEx.DOT) {
-			id_gauche = remplir(t.subTrees.get(0), id);
-			id_droite = remplir(t.subTrees.get(1), id_gauche + 1);
-
-			epsilon[id_gauche][id_droite - 1] = true;
-
-			sorties[id_gauche] = false;
-			entrees[id_gauche + 1] = false;
-			entrees[id_droite - 1] = false;
-
-			return id_droite;
-
-		} else if (t.root == RegEx.ALTERN) {
-			id_gauche = remplir(t.subTrees.get(0), id);
-			id_droite = remplir(t.subTrees.get(1), id_gauche + 1);
-
-			epsilon[id_droite + 1][id_gauche - 1] = true;
-			//epsilon[id_droite + 1][id] = true;
-			epsilon[id_gauche][id_droite + 2] = true;
-
-			epsilon[id_droite + 1][id_gauche + 1] = true;
-			//epsilon[id_droite + 1][id] = true;
-			epsilon[id_droite][id_droite + 2] = true;
-
-			sorties[id_gauche] = false;
-			sorties[id_droite] = false;
-			sorties[id_droite + 2] = true;
-
-			entrees[id] = false;
-			entrees[id_gauche + 1] = false;
-			entrees[id_gauche - 1] = false;
-			entrees[id_droite + 1] = true;
-
-			return id_droite + 2;
-
-		} else if (t.root == RegEx.ETOILE) {
-			int debut = id;
-			int fin = remplir(t.subTrees.get(0), debut);
-
-			epsilon[fin][fin - 1] = true;
-			epsilon[fin][fin + 2] = true;
-			epsilon[fin + 1][fin - 1] = true;
-			epsilon[fin + 1][fin + 2] = true;
-
-			entrees[debut] = false;
-			entrees[fin + 1] = true;
-			entrees[fin - 1] = false;
-			sorties[fin] = false;
-			sorties[fin + 2] = true;
-
-			return fin + 2;
-
-		} else if (t.root == RegEx.PARENTHESEOUVRANT) {
-			return remplir(t.subTrees.get(0), id);
-
-		} else if (t.root == RegEx.PARENTHESEFERMANT) {
-			return remplir(t.subTrees.get(0), id);
-
-		} else {
-			entrees[id] = true;
-			transition[id][t.root] = ++id;
-			sorties[id] = true;
-			return id;
-		}
-
-	}
+	
 
 	public void afficher() {
 
@@ -394,9 +312,10 @@ public class Automate {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
-								
+								System.out.println(word_line[m]);
 								if (entrees[etat]) {
 									if (matching(word_line[m], 0, keys)) {
+										System.out.println(word_line[m]);
 										result_matching = true;
 										if (!mots.containsKey(line_number)) {
 											mots.put(line_number, new ArrayList<>());
@@ -414,7 +333,9 @@ public class Automate {
 
 				}
 				line_number++;
+				System.out.println(line_number);
 				line = null;
+				
 			}
 			// System.out.println("END READ LINE");
 		}

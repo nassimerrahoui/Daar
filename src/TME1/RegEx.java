@@ -52,13 +52,13 @@ public class RegEx {
 				Automate a = new Automate(ret);
 				a.remplir2(ret, 0);
 				
-//				a.afficher();
+				//a.afficher();
 				
 				System.out.println("********Determinisation**********");
 				
 				a.determiniser();
 				
-//				a.afficher_determinisation();
+				//a.afficher_determinisation();
 				
 
 				System.out.println("*************Grep****************");
@@ -324,7 +324,7 @@ class RegExTree {
 		if (root == RegEx.ALTERN)
 			return "|";
 		if (root == RegEx.DOT)
-			return ".";
+			return "."; //<(*o*<)
 		return Character.toString((char) root);
 	}
 
@@ -332,7 +332,7 @@ class RegExTree {
 		if (root == RegEx.CONCAT) return 0;
 		if (root == RegEx.ETOILE) return 2;
 		if (root == RegEx.ALTERN) return 2;
-		if (root == RegEx.DOT) return 0;
+		if (root == RegEx.DOT) return 2;
 		return 2;
 	}
 	
