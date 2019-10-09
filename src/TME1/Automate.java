@@ -22,14 +22,13 @@ public class Automate {
 
 	public Automate(RegExTree t) {
 		int n = t.parcours();
-		System.out.println("NB DE NOEUDS " + n);
 		entrees = new boolean[n];
 		sorties = new boolean[n];
-		transition = new int[n][66000];
+		transition = new int[n][256];
 		epsilon = new boolean[n][n];
 
 		for (int i = 0; i < n; i++)
-			for (int j = 0; j < 66000; j++)
+			for (int j = 0; j < 256; j++)
 				transition[i][j] = -1;
 
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
@@ -78,9 +77,7 @@ public class Automate {
 			int[]res = new int[2];
 			
 			id_gauche = remplir2(t.subTrees.get(0), id);
-			System.out.println(id_gauche[0] + " gauche " + id_gauche[1]);
 			id_droite = remplir2(t.subTrees.get(1), id_gauche[1] + 1);
-			System.out.println(id_droite[0] + " droite " + id_droite[1]);
 			res[0]= id_droite[1]+1;
 			res[1]= id_droite[1]+2;
 
@@ -281,7 +278,7 @@ public class Automate {
 				new_etat = new_keys.get(0);
 			}
 
-			Set<Integer>[] transitions_determinisation = new HashSet[66000];
+			Set<Integer>[] transitions_determinisation = new HashSet[256];
 
 			for (Iterator<Integer> ite = new_etat.iterator(); ite.hasNext();) {
 				int i = ite.next();

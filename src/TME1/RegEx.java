@@ -52,13 +52,13 @@ public class RegEx {
 				Automate a = new Automate(ret);
 				a.remplir2(ret, 0);
 				
-				a.afficher();
+//				a.afficher();
 				
 				System.out.println("********Determinisation**********");
 				
 				a.determiniser();
 				
-				a.afficher_determinisation();
+//				a.afficher_determinisation();
 				
 
 				System.out.println("*************Grep****************");
