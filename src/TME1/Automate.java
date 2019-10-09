@@ -24,11 +24,11 @@ public class Automate {
 		int n = t.parcours();
 		entrees = new boolean[n];
 		sorties = new boolean[n];
-		transition = new int[n][256];
+		transition = new int[n][66000];
 		epsilon = new boolean[n][n];
 
 		for (int i = 0; i < n; i++)
-			for (int j = 0; j < 256; j++)
+			for (int j = 0; j < 66000; j++)
 				transition[i][j] = -1;
 
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
@@ -41,7 +41,6 @@ public class Automate {
 		int[] id_droite;
 
 		if (t.root == RegEx.CONCAT) {
-			System.out.println("DEBUT CONCATENATION");
 			int[]res = new int[2];
 			res[0]= id;
 			id_gauche = remplir2(t.subTrees.get(0), id);
@@ -54,22 +53,19 @@ public class Automate {
 			sorties[id_gauche[1]] = false;
 			entrees[id_gauche[1] + 1] = false;
 			entrees[id_droite[1] - 1] = false;
-			System.out.println("FIN CONCATENATION");
 			return res;
 
 		} else if (t.root == RegEx.DOT) {
-			System.out.println("DEBUT DOT");
 			int[]res= new int[2];
 			res[0]= id;
 			
 			entrees[id] = true;
 			int incr = id+1;
-			for (int i=0; i<256; i++)
+			for (int i=0; i<66000; i++)
 				transition[id][i] = incr;
 			id++;
 			sorties[id] = true;
 			res[1]= id;
-			System.out.println("FIN DOT");
 			return res;
 
 		} else if (t.root == RegEx.ALTERN) {
@@ -196,7 +192,7 @@ public class Automate {
 				new_etat = new_keys.get(0);
 			}
 
-			Set<Integer>[] transitions_determinisation = new HashSet[256];
+			Set<Integer>[] transitions_determinisation = new HashSet[66000];
 
 			for (Iterator<Integer> ite = new_etat.iterator(); ite.hasNext();) {
 				int i = ite.next();
@@ -260,7 +256,6 @@ public class Automate {
 				}
 
 			}
-			System.out.println("---------");
 		}
 	}
 
@@ -312,17 +307,18 @@ public class Automate {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
-								System.out.println(word_line[m]);
 								if (entrees[etat]) {
-									if (matching(word_line[m], 0, keys)) {
-										System.out.println(word_line[m]);
-										result_matching = true;
-										if (!mots.containsKey(line_number)) {
-											mots.put(line_number, new ArrayList<>());
+									for(int i=0; i<word_line[m].length(); i++) {
+										if (matching(word_line[m].substring(i), 0, keys)) {
+											//System.out.println(word_line[m]);
+											result_matching = true;
+											if (!mots.containsKey(line_number)) {
+												mots.put(line_number, new ArrayList<>());
+											}
+											//mots.get(line_number).add(word_line[m]);
+											mots.get(line_number).add(line);
+											break;
 										}
-										//mots.get(line_number).add(word_line[m]);
-										mots.get(line_number).add(line);
-										break;
 									}
 								}
 
@@ -333,7 +329,6 @@ public class Automate {
 
 				}
 				line_number++;
-				System.out.println(line_number);
 				line = null;
 				
 			}
@@ -348,7 +343,6 @@ public class Automate {
 		for(Integer i : map.keySet()) {
 			System.out.println("ligne "+ Integer.sum(i, 1) + " : " + map.get(i));
 		}
-//		results.forEach((key, value) -> System.out.println("ligne " + key + " : " + value));
 		System.out.println("Size : " + results.size());
 	}
 
