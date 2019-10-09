@@ -50,7 +50,7 @@ public class RegEx {
 				System.out.println("  >> Tree result: " + ret.toString() + ".");
 				
 				Automate a = new Automate(ret);
-				a.remplir(ret, 0);
+				a.remplir2(ret, 0);
 				
 				a.afficher();
 				

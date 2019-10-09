@@ -35,6 +35,115 @@ public class Automate {
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
 		
 	}
+	
+	
+	public int[] remplir2(RegExTree t, int id) {
+		int[] id_gauche;
+		int[] id_droite;
+
+		if (t.root == RegEx.CONCAT) {
+			int[]res = new int[2];
+			res[0]= id;
+			id_gauche = remplir2(t.subTrees.get(0), id);
+			id_droite = remplir2(t.subTrees.get(1), id_gauche[1] + 1);
+			
+			res[1]=id_droite[1];
+
+			epsilon[id_gauche[1]][id_droite[1] - 1] = true;
+
+			sorties[id_gauche[1]] = false;
+			entrees[id_gauche[1] + 1] = false;
+			entrees[id_droite[1] - 1] = false;
+
+			return res;
+
+		} else if (t.root == RegEx.DOT) {
+			int[]res = new int[2];
+			res[0]= id;
+			
+			id_gauche = remplir2(t.subTrees.get(0), id);
+			id_droite = remplir2(t.subTrees.get(1), id_gauche[1] + 1);
+			
+			res[1]=id_droite[1];
+			
+			epsilon[id_gauche[1]][id_droite[1] - 1] = true;
+
+			sorties[id_gauche[1]] = false;
+			entrees[id_gauche[1] + 1] = false;
+			entrees[id_droite[1] - 1] = false;
+
+			return res;
+
+		} else if (t.root == RegEx.ALTERN) {
+			int[]res = new int[2];
+			
+			id_gauche = remplir2(t.subTrees.get(0), id);
+			System.out.println(id_gauche[0] + " gauche " + id_gauche[1]);
+			id_droite = remplir2(t.subTrees.get(1), id_gauche[1] + 1);
+			System.out.println(id_droite[0] + " droite " + id_droite[1]);
+			res[0]= id_droite[1]+1;
+			res[1]= id_droite[1]+2;
+
+			epsilon[id_droite[1] + 1][id_gauche[0]] = true;
+			//epsilon[id_droite + 1][id] = true;
+			epsilon[id_gauche[1]][id_droite[1] + 2] = true;
+
+			epsilon[id_droite[1] + 1][id_droite[0]] = true;
+			//epsilon[id_droite + 1][id] = true;
+			epsilon[id_droite[1]][id_droite[1] + 2] = true;
+
+			sorties[id_gauche[1]] = false;
+			sorties[id_droite[1]] = false;
+			sorties[id_droite[1] + 2] = true;
+
+			entrees[id] = false;
+			entrees[id_gauche[1] + 1] = false;
+			entrees[id_gauche[1] - 1] = false;
+			entrees[id_droite[1] + 1] = true;
+
+			return res;
+
+		} else if (t.root == RegEx.ETOILE) {
+			int debut = id;
+			int fin = remplir2(t.subTrees.get(0), debut)[1];
+
+			epsilon[fin][fin - 1] = true;
+			epsilon[fin][fin + 2] = true;
+			epsilon[fin + 1][fin - 1] = true;
+			epsilon[fin + 1][fin + 2] = true;
+
+			entrees[debut] = false;
+			entrees[fin + 1] = true;
+			entrees[fin - 1] = false;
+			sorties[fin] = false;
+			sorties[fin + 2] = true;
+
+			int[]res= new int[2];
+			res[0]= fin+1;
+			res[1]= fin+2;
+			return res;
+
+		} else if (t.root == RegEx.PARENTHESEOUVRANT) {
+			return remplir2(t.subTrees.get(0), id);
+
+		} else if (t.root == RegEx.PARENTHESEFERMANT) {
+			return remplir2(t.subTrees.get(0), id);
+
+		} else {
+			
+			int[]res= new int[2];
+			res[0]= id;
+			
+			
+			entrees[id] = true;
+			transition[id][t.root] = ++id;
+			sorties[id] = true;
+			
+			res[1]= id;
+			return res;
+		}
+
+	}
 
 	public int remplir(RegExTree t, int id) {
 		int id_gauche;
@@ -166,10 +275,8 @@ public class Automate {
 			if (nb_iterations == 0) {
 				new_etat.add(debut);
 				for (int i = 0; i < epsilon[debut].length; i++)
-					if (epsilon[debut][i]) {
+					if (epsilon[debut][i]) 
 						new_etat.add(i);
-						System.out.println(i);
-					}
 			} else {
 				new_etat = new_keys.get(0);
 			}
@@ -243,36 +350,20 @@ public class Automate {
 	}
 
 	public boolean matching(String mot, int index, Set<Integer> key_etat) {
-		if(mot.equals("describes"))
-			System.out.println("matching 1");
 		
 		for (Iterator<Integer> it = key_etat.iterator(); it.hasNext();) {
 			int i = it.next();
 			if (sorties[i]) {
-				//System.out.println("i = "+i);
 				return true;
 			}
-		}
-		
-		//index++;
-		if(mot.equals("describes")) {
-			System.out.println(key_etat);
-			System.out.println(mot.charAt(index));
-			System.out.println(etats.get(key_etat)[mot.charAt(index)]);
 		}
 			
 		if (index >= mot.length() || etats.get(key_etat)[mot.charAt(index)] == null)
 			return false;
-		
-		if(mot.equals("describes"))
-			System.out.println("matching 6");
 			
 		if (etats.get(key_etat)[mot.charAt(index)] != null) {
 			return matching(mot, index+1, etats.get(key_etat)[mot.charAt(index)]);
 		}
-		
-		if(mot.equals("describes"))
-			System.out.println("matching 7");
 		
 		return false;
 	}
@@ -299,9 +390,6 @@ public class Automate {
 
 				for (int m = 0; m < word_line.length; m++) {
 
-					//System.out.println(word_line[m]);
-					// System.out.println("size : " + etats.size());
-
 					// on compare la lettre et la transition
 					boolean result_matching = false;
 //					System.out.println(word_line[m]);
@@ -309,34 +397,17 @@ public class Automate {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
-//								System.out.println("ok1");
-								
-								/*for (int i = 0; i<entrees.length;i++) {
-									if (entrees[i] && word_line[m].equals("describes"))
-										System.out.println(i);
-								}*/
-								
-								if(word_line[m].equals("describes"))
-									System.out.println(etat);
-								
-								if (entrees[etat] && word_line[m].equals("describes"))
-									System.out.println("fait le match a " + etat);
 								
 								if (entrees[etat]) {
-//									System.out.println("ok2");
 									if (matching(word_line[m], 0, keys)) {
 										result_matching = true;
-										System.out.println(word_line[m]+"   ok3");
 										if (!mots.containsKey(line_number)) {
-//											System.out.println("ok4");
 											mots.put(line_number, new ArrayList<>());
 										}
-//										System.out.println("ok5");
 										//mots.get(line_number).add(word_line[m]);
 										mots.get(line_number).add(line);
 										break;
 									}
-//									System.out.println("ok6");
 								}
 
 							}
