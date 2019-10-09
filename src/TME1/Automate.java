@@ -25,11 +25,11 @@ public class Automate {
 		System.out.println("NB DE NOEUDS " + n);
 		entrees = new boolean[n];
 		sorties = new boolean[n];
-		transition = new int[n][256];
+		transition = new int[n][66000];
 		epsilon = new boolean[n][n];
 
 		for (int i = 0; i < n; i++)
-			for (int j = 0; j < 256; j++)
+			for (int j = 0; j < 66000; j++)
 				transition[i][j] = -1;
 
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
@@ -69,9 +69,11 @@ public class Automate {
 			id_droite = remplir(t.subTrees.get(1), id_gauche + 1);
 
 			epsilon[id_droite + 1][id_gauche - 1] = true;
+			//epsilon[id_droite + 1][id] = true;
 			epsilon[id_gauche][id_droite + 2] = true;
 
 			epsilon[id_droite + 1][id_gauche + 1] = true;
+			//epsilon[id_droite + 1][id] = true;
 			epsilon[id_droite][id_droite + 2] = true;
 
 			sorties[id_gauche] = false;
@@ -172,7 +174,7 @@ public class Automate {
 				new_etat = new_keys.get(0);
 			}
 
-			Set<Integer>[] transitions_determinisation = new HashSet[256];
+			Set<Integer>[] transitions_determinisation = new HashSet[66000];
 
 			for (Iterator<Integer> ite = new_etat.iterator(); ite.hasNext();) {
 				int i = ite.next();
@@ -241,29 +243,37 @@ public class Automate {
 	}
 
 	public boolean matching(String mot, int index, Set<Integer> key_etat) {
-		System.out.println("matching 1");
+		if(mot.equals("describes"))
+			System.out.println("matching 1");
+		
 		for (Iterator<Integer> it = key_etat.iterator(); it.hasNext();) {
 			int i = it.next();
-			if (sorties[i])
+			if (sorties[i]) {
+				//System.out.println("i = "+i);
 				return true;
+			}
 		}
 		
-		System.out.println("matching 4");
-		System.out.println(key_etat);
-		System.out.println(index);
-		System.out.println(mot);
-		System.out.println(mot.length());
-		System.out.println(mot.charAt(2));
+		//index++;
+		if(mot.equals("describes")) {
+			System.out.println(key_etat);
+			System.out.println(mot.charAt(index));
+			System.out.println(etats.get(key_etat)[mot.charAt(index)]);
+		}
+			
 		if (index >= mot.length() || etats.get(key_etat)[mot.charAt(index)] == null)
 			return false;
 		
-		System.out.println("matching 6");
-		
+		if(mot.equals("describes"))
+			System.out.println("matching 6");
+			
 		if (etats.get(key_etat)[mot.charAt(index)] != null) {
 			return matching(mot, index+1, etats.get(key_etat)[mot.charAt(index)]);
 		}
 		
-		System.out.println("matching 7");
+		if(mot.equals("describes"))
+			System.out.println("matching 7");
+		
 		return false;
 	}
 
@@ -294,33 +304,45 @@ public class Automate {
 
 					// on compare la lettre et la transition
 					boolean result_matching = false;
-					System.out.println(word_line[m]);
+//					System.out.println(word_line[m]);
 					for (Set<Integer> keys : etats.keySet()) {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
-								System.out.println("ok1");
+//								System.out.println("ok1");
+								
+								/*for (int i = 0; i<entrees.length;i++) {
+									if (entrees[i] && word_line[m].equals("describes"))
+										System.out.println(i);
+								}*/
+								
+								if(word_line[m].equals("describes"))
+									System.out.println(etat);
+								
+								if (entrees[etat] && word_line[m].equals("describes"))
+									System.out.println("fait le match a " + etat);
+								
 								if (entrees[etat]) {
-									System.out.println("ok2");
+//									System.out.println("ok2");
 									if (matching(word_line[m], 0, keys)) {
 										result_matching = true;
-										System.out.println("ok3");
+										System.out.println(word_line[m]+"   ok3");
 										if (!mots.containsKey(line_number)) {
-											System.out.println("ok4");
+//											System.out.println("ok4");
 											mots.put(line_number, new ArrayList<>());
 										}
-										System.out.println("ok5");
+//										System.out.println("ok5");
 										//mots.get(line_number).add(word_line[m]);
 										mots.get(line_number).add(line);
 										break;
 									}
-									System.out.println("ok6");
+//									System.out.println("ok6");
 								}
 
 							}
 						}
 					}
-					System.out.println(word_line[m] + " ok");
+//					System.out.println(word_line[m] + " ok");
 
 				}
 				line_number++;
