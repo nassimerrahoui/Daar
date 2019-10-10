@@ -77,11 +77,9 @@ public class Automate {
 			res[1]= id_droite[1]+2;
 
 			epsilon[id_droite[1] + 1][id_gauche[0]] = true;
-			//epsilon[id_droite + 1][id] = true;
 			epsilon[id_gauche[1]][id_droite[1] + 2] = true;
 
 			epsilon[id_droite[1] + 1][id_droite[0]] = true;
-			//epsilon[id_droite + 1][id] = true;
 			epsilon[id_droite[1]][id_droite[1] + 2] = true;
 
 			sorties[id_gauche[1]] = false;
@@ -284,25 +282,21 @@ public class Automate {
 		String line = null;
 		int line_number = 0;
 
-		// System.out.println("BEFORE READFILE");
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-			// System.out.println("FILE FOUND");
 			while ((line = br.readLine()) != null) {
-
+			
 				if (line.isEmpty()) {
 					line_number++;
 					continue;
 				}
 
 				String word_line[] = line.trim().split("\\s+");
-				// System.out.println("SPLIT");
-				// on parcours les mots de la ligne
 
 				for (int m = 0; m < word_line.length; m++) {
 
 					// on compare la lettre et la transition
 					boolean result_matching = false;
-//					System.out.println(word_line[m]);
+
 					for (Set<Integer> keys : etats.keySet()) {
 						if (!result_matching) {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
@@ -310,12 +304,10 @@ public class Automate {
 								if (entrees[etat]) {
 									for(int i=0; i<word_line[m].length(); i++) {
 										if (matching(word_line[m].substring(i), 0, keys)) {
-											//System.out.println(word_line[m]);
 											result_matching = true;
 											if (!mots.containsKey(line_number)) {
 												mots.put(line_number, new ArrayList<>());
 											}
-											//mots.get(line_number).add(word_line[m]);
 											mots.get(line_number).add(line);
 											break;
 										}
@@ -325,14 +317,12 @@ public class Automate {
 							}
 						}
 					}
-//					System.out.println(word_line[m] + " ok");
 
 				}
 				line_number++;
 				line = null;
 				
 			}
-			// System.out.println("END READ LINE");
 		}
 		return mots;
 
