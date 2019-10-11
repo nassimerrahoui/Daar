@@ -109,8 +109,11 @@ public class RegEx {
 	private static RegExTree parse(ArrayList<RegExTree> result) throws Exception {
 		while (containParenthese(result))
 			result = processParenthese(result);
-		while(containBackSlash(result))
+		while(containBackSlash(result)) {
 			result = processBackSlash(result);
+			if(result.size() <= 1)
+				break;
+		}
 		while (containEtoile(result))
 			result = processEtoile(result);
 		while (containConcat(result))
@@ -201,35 +204,15 @@ public class RegEx {
 		for (int i=0; i<trees.size(); i++) {
 			if (!found && trees.get(i).root == charToRoot('\\') && trees.get(i).subTrees.isEmpty()) {
 				
-				/** NE PAS JETER EXCEPTION car egrep genere resultat avec etoile seule */
-//				if (result.isEmpty()) {
-//					System.out.println("THROW ERROR");
-//					throw new Exception();
-//				}
-				
-				
-				/*if (trees.size() == 1) {
-					System.out.println("THROW ERROR");
-					return trees;
-				}*/
-				
 				found = true;
-				System.out.println("----------- i = "+i);
-				System.out.println("AVANT trees.size() = "+trees.size());
 				RegExTree last = trees.remove(i+1);
-				
-				//RegExTree last = result.remove(0);
-				System.out.println("backslash "+ last.rootToString().charAt(0));
 				ArrayList<RegExTree> subTrees = new ArrayList<RegExTree>();
-				//subTrees.add(last);
 				result.add(new RegExTree((int)last.rootToString().charAt(0), subTrees));
-				System.out.println("APRES trees.size() = "+trees.size());
 			} else {
 				result.add(trees.get(i));
 				System.out.println("i = "+ i +" t = " + (char)trees.get(i).root);
 			}
 		}
-		System.out.println("result.size() = "+result.size());
 		
 		return result;
 	}

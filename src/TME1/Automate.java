@@ -290,7 +290,9 @@ public class Automate {
 					continue;
 				}
 
-				String word_line[] = line.trim().split("\\s+");
+				/**TODO**/
+				//String word_line[] = line.trim().split("\\s+");
+				String word_line[] = line.split("");
 
 				for (int m = 0; m < word_line.length; m++) {
 
