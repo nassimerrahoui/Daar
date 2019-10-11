@@ -105,9 +105,12 @@ public class RegEx {
 		return (int) c;
 	}
 
+	
 	private static RegExTree parse(ArrayList<RegExTree> result) throws Exception {
 		while (containParenthese(result))
 			result = processParenthese(result);
+		while(containBackSlash(result))
+			result = processBackSlash(result);
 		while (containEtoile(result))
 			result = processEtoile(result);
 		while (containConcat(result))
@@ -175,6 +178,37 @@ public class RegEx {
 				ArrayList<RegExTree> subTrees = new ArrayList<RegExTree>();
 				subTrees.add(last);
 				result.add(new RegExTree(ETOILE, subTrees));
+			} else {
+				result.add(t);
+			}
+		}
+		return result;
+	}
+	
+	private static boolean containBackSlash(ArrayList<RegExTree> trees) {
+		for (RegExTree t : trees)
+			if (t.root == charToRoot('\\') && t.subTrees.isEmpty()) {
+				System.out.println("contains backslash");
+				return true;
+			}
+		return false;
+	}
+	
+	private static ArrayList<RegExTree> processBackSlash(ArrayList<RegExTree> trees) throws Exception {
+		ArrayList<RegExTree> result = new ArrayList<RegExTree>();
+		boolean found = false;
+		for (RegExTree t : trees) {
+			if (!found && t.root == charToRoot('\\') && t.subTrees.isEmpty()) {
+				if (result.isEmpty())
+					throw new Exception();
+				
+				found = true;
+				RegExTree last = result.remove(result.size() - 1);
+				//RegExTree last = result.remove(0);
+				System.out.println("backslash "+ last.rootToString().charAt(0));
+				ArrayList<RegExTree> subTrees = new ArrayList<RegExTree>();
+				//subTrees.add(last);
+				result.add(new RegExTree((int)last.rootToString().charAt(0), subTrees));
 			} else {
 				result.add(t);
 			}
