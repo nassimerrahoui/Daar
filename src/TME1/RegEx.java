@@ -197,22 +197,40 @@ public class RegEx {
 	private static ArrayList<RegExTree> processBackSlash(ArrayList<RegExTree> trees) throws Exception {
 		ArrayList<RegExTree> result = new ArrayList<RegExTree>();
 		boolean found = false;
-		for (RegExTree t : trees) {
-			if (!found && t.root == charToRoot('\\') && t.subTrees.isEmpty()) {
-				if (result.isEmpty())
-					throw new Exception();
+		System.out.println("APPEL DE PROCESS");
+		for (int i=0; i<trees.size(); i++) {
+			if (!found && trees.get(i).root == charToRoot('\\') && trees.get(i).subTrees.isEmpty()) {
+				
+				/** NE PAS JETER EXCEPTION car egrep genere resultat avec etoile seule */
+//				if (result.isEmpty()) {
+//					System.out.println("THROW ERROR");
+//					throw new Exception();
+//				}
+				
+				
+				/*if (trees.size() == 1) {
+					System.out.println("THROW ERROR");
+					return trees;
+				}*/
 				
 				found = true;
-				RegExTree last = result.remove(result.size() - 1);
+				System.out.println("----------- i = "+i);
+				System.out.println("AVANT trees.size() = "+trees.size());
+				RegExTree last = trees.remove(i+1);
+				
 				//RegExTree last = result.remove(0);
 				System.out.println("backslash "+ last.rootToString().charAt(0));
 				ArrayList<RegExTree> subTrees = new ArrayList<RegExTree>();
 				//subTrees.add(last);
 				result.add(new RegExTree((int)last.rootToString().charAt(0), subTrees));
+				System.out.println("APRES trees.size() = "+trees.size());
 			} else {
-				result.add(t);
+				result.add(trees.get(i));
+				System.out.println("i = "+ i +" t = " + (char)trees.get(i).root);
 			}
 		}
+		System.out.println("result.size() = "+result.size());
+		
 		return result;
 	}
 
