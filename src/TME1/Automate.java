@@ -17,6 +17,7 @@ public class Automate {
 	boolean[] entrees;
 	boolean[] sorties;
 	boolean[][] epsilon;
+	boolean sortie_directe;
 
 	HashMap<Set<Integer>, Set<Integer>[]> etats;
 
@@ -32,6 +33,7 @@ public class Automate {
 				transition[i][j] = -1;
 
 		etats = new HashMap<Set<Integer>, Set<Integer>[]>();
+		sortie_directe = false;
 		
 	}
 	
@@ -133,6 +135,20 @@ public class Automate {
 			return res;
 		}
 
+	}
+	
+	
+	public void setSortieDirecte() {
+		for (int i=0; i<entrees.length; i++) {
+			if(entrees[i]) {
+				for (int j=0; j<sorties.length; j++) {
+					if(sorties[j] && epsilon[i][j]) {
+						sortie_directe = true;
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	
@@ -286,6 +302,10 @@ public class Automate {
 			while ((line = br.readLine()) != null) {
 			
 				if (line.isEmpty()) {
+					if(sortie_directe) {
+						mots.put(line_number, new ArrayList<>());
+						mots.get(line_number).add(line);
+					}
 					line_number++;
 					continue;
 				}
@@ -317,7 +337,10 @@ public class Automate {
 				}
 				line_number++;
 				line = null;
-				
+			}
+			
+			if(sortie_directe && mots.get(line_number-1).get(0).isEmpty()) {
+				mots.remove(line_number-1);
 			}
 		}
 		return mots;
@@ -329,7 +352,6 @@ public class Automate {
 		for(Integer i : map.keySet()) {
 			System.out.println("ligne "+ Integer.sum(i, 1) + " : " + map.get(i));
 		}
-		System.out.println("Size : " + results.size());
 	}
 
 }

@@ -2,6 +2,7 @@ package TME1;
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.lang.Exception;
 
 public class RegEx {
@@ -45,25 +46,36 @@ public class RegEx {
 				System.out.print("," + (char) regEx.charAt(i));
 			System.out.println("].");
 			try {
+				long startTime = System.currentTimeMillis();
 				RegExTree ret = parse();
 				
 				System.out.println("  >> Tree result: " + ret.toString() + ".");
 				
 				Automate a = new Automate(ret);
 				a.remplir2(ret, 0);
+				a.setSortieDirecte();
 				
 				//a.afficher();
 				
-				System.out.println("********Determinisation**********");
+				//System.out.println("********Determinisation**********");
 				
 				a.determiniser();
 				
 				//a.afficher_determinisation();
 				
 
-				System.out.println("*************Grep****************");
+				//System.out.println("*************Grep****************");
 				
-				a.afficher_grep(a.custom_grep("resources/babylonia.txt"));
+				HashMap<Integer, ArrayList<String>> resultat = a.custom_grep("resources/babylonia.txt");
+				
+				a.afficher_grep(resultat);
+				
+				long stopTime = System.currentTimeMillis();
+			    long elapsedTime = stopTime - startTime;
+				
+				//a.afficher_grep(resultat);
+				System.out.println("nb de résultats = "+resultat.size());
+				System.out.println("Temps d'éxecution : " + elapsedTime + " ms");
 				
 			} catch (Exception e) {
 				System.err.println("  >> ERROR: syntax error for regEx \"" + regEx + "\".");
