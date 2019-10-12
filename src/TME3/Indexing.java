@@ -28,7 +28,7 @@ public class Indexing {
 		String filename = sc.next();
 		sc.close();
 		try {
-			read("resources/" + filename);
+			read(filename);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -43,7 +43,7 @@ public class Indexing {
 
 		int line_number = 0;
 
-		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+		try (BufferedReader br = new BufferedReader(new FileReader("resources/" +filename))) {
 			while ((line = br.readLine()) != null) {
 				if (line.isEmpty()) {
 					line_number++;
@@ -91,8 +91,8 @@ public class Indexing {
 			// }
 			// System.out.println();
 			// }
-
-			FileWriter w = new FileWriter("result/index_table.txt");
+			
+			FileWriter w = new FileWriter("result/index_table-"+ filename);
 			BufferedWriter bw = new BufferedWriter(w);
 			sorted_mots = sortByFrequence(mots);
 			
@@ -103,7 +103,7 @@ public class Indexing {
 					break;
 				bw.write(key + " : ");
 				for (Point p : sorted_mots.get(key)) {
-					bw.write("(" + p.x + "," + p.y + ") | ");
+					bw.write(" " + p.x + "," + p.y + " ");
 				}
 				bw.newLine();
 			}
@@ -136,35 +136,5 @@ public class Indexing {
 		}
 		mots.clear();
 		return sorted_mots;
-	}
-
-	public static ArrayList<String> searchPatternInIndex(String index_filename, String motif)
-			throws FileNotFoundException, IOException {
-		ArrayList<String> result = new ArrayList<>();
-		String line = "";
-
-		try (BufferedReader br = new BufferedReader(new FileReader(index_filename))) {
-			while ((line = br.readLine()) != null) {
-				if (line.isEmpty()) {
-					continue;
-				}
-
-				String word_line[] = line.trim().split(":");
-
-				/** TO DO **/
-				/** Changer le parcours en parcours dichotomique **/
-
-				char[] motif_array = motif.toCharArray();
-
-				for (int i = 0; i < word_line.length; i++) {
-					char[] word_array = word_line[i].toCharArray();
-					for (int j = 0; j < word_array.length; j++) {
-						if (word_array[j] != motif_array[j])
-							result.add(word_line[i]);
-					}
-				}
-			}
-		}
-		return null;
 	}
 }

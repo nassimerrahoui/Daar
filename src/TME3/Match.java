@@ -11,7 +11,7 @@ public class Match {
 				return i - facteur.length;
 			}
 
-			if (texte[i] == facteur[j]) {
+			if (i < texte.length && texte[i] == facteur[j]) {
 				i++;
 				j++;
 			} else {

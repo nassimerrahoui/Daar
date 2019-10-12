@@ -12,7 +12,7 @@ public class Launcher {
 		
 		Scanner sc = new Scanner(System.in);
 		System.out.println(" >> Veuillez entrer le nom du fichier : ");
-		System.out.println(" >> NB : ne fichier doit etre dans resources.");
+		System.out.println(" >> NB : Le fichier doit etre dans resources.");
 		String filename = sc.next();
 		sc.close();
 		
