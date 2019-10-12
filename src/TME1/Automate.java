@@ -290,11 +290,7 @@ public class Automate {
 					continue;
 				}
 
-				/**TODO**/
-				//String word_line[] = line.trim().split("\\s+");
-				String word_line[] = line.split("");
-
-				for (int m = 0; m < word_line.length; m++) {
+				for (int m = 0; m < line.length(); m++) {
 
 					// on compare la lettre et la transition
 					boolean result_matching = false;
@@ -304,8 +300,7 @@ public class Automate {
 							for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
 								int etat = it.next();
 								if (entrees[etat]) {
-									for(int i=0; i<word_line[m].length(); i++) {
-										if (matching(word_line[m].substring(i), 0, keys)) {
+										if (matching(line.substring(m), 0, keys)) {
 											result_matching = true;
 											if (!mots.containsKey(line_number)) {
 												mots.put(line_number, new ArrayList<>());
@@ -313,7 +308,6 @@ public class Automate {
 											mots.get(line_number).add(line);
 											break;
 										}
-									}
 								}
 
 							}

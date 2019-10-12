@@ -31,7 +31,7 @@ public class RegEx {
 		} else {
 			Scanner scanner = new Scanner(System.in);
 			System.out.print("  >> Please enter a regEx: ");
-			regEx = scanner.next();
+			regEx = scanner.nextLine();
 			scanner.close();
 		}
 		System.out.println("  >> Parsing regEx \"" + regEx + "\".");
@@ -191,7 +191,6 @@ public class RegEx {
 	private static boolean containBackSlash(ArrayList<RegExTree> trees) {
 		for (RegExTree t : trees)
 			if (t.root == charToRoot('\\') && t.subTrees.isEmpty()) {
-				System.out.println("contains backslash");
 				return true;
 			}
 		return false;
@@ -200,7 +199,6 @@ public class RegEx {
 	private static ArrayList<RegExTree> processBackSlash(ArrayList<RegExTree> trees) throws Exception {
 		ArrayList<RegExTree> result = new ArrayList<RegExTree>();
 		boolean found = false;
-		System.out.println("APPEL DE PROCESS");
 		for (int i=0; i<trees.size(); i++) {
 			if (!found && trees.get(i).root == charToRoot('\\') && trees.get(i).subTrees.isEmpty()) {
 				
