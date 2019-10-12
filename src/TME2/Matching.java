@@ -10,7 +10,8 @@ public class Matching {
 	public static int matchingAlgo(char[] facteur, int[] retenue, char[] texte) {
 		int i = 0;
 		int j = 0;
-		while (i < texte.length) {
+
+		while (i <= texte.length) {
 			if (j == facteur.length) {
 				return i - facteur.length;
 			}
@@ -31,7 +32,7 @@ public class Matching {
 		return -1;
 	}
 
-	public int[] retenues(char[] facteur) {
+	public static int[] retenues(char[] facteur) {
 		int[] result = new int[facteur.length + 1];
 
 		if (facteur.length > 0)
@@ -93,7 +94,7 @@ public class Matching {
 		try (BufferedReader br = new BufferedReader(new FileReader("resources/"+filename))) {
 			
 			while ((line = br.readLine()) != null) {
-				contenu += line;
+				contenu += line + '\n';
 			}
 		}
 

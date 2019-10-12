@@ -95,6 +95,7 @@ public class Indexing {
 			FileWriter w = new FileWriter("result/index_table.txt");
 			BufferedWriter bw = new BufferedWriter(w);
 			sorted_mots = sortByFrequence(mots);
+			
 			for (String key : sorted_mots.keySet()) {
 
 				// les mots qui apparaissent plus de 100 sont exclus.

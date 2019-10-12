@@ -66,7 +66,7 @@ public class RegEx {
 
 				//System.out.println("*************Grep****************");
 				
-				HashMap<Integer, ArrayList<String>> resultat = a.custom_grep("resources/babylonia.txt");
+				HashMap<Integer, String> resultat = a.custom_grep("resources/babylonia.txt");
 				
 				a.afficher_grep(resultat);
 				

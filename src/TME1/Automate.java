@@ -292,9 +292,9 @@ public class Automate {
 		return false;
 	}
 
-	public HashMap<Integer, ArrayList<String>> custom_grep(String filename) throws FileNotFoundException, IOException {
+	public HashMap<Integer, String> custom_grep(String filename) throws FileNotFoundException, IOException {
 
-		HashMap<Integer, ArrayList<String>> mots = new HashMap<Integer, ArrayList<String>>();
+		HashMap<Integer, String> mots = new HashMap<Integer, String>();
 		String line = null;
 		int line_number = 0;
 
@@ -303,8 +303,7 @@ public class Automate {
 			
 				if (line.isEmpty()) {
 					if(sortie_directe) {
-						mots.put(line_number, new ArrayList<>());
-						mots.get(line_number).add(line);
+						mots.put(line_number, line);
 					}
 					line_number++;
 					continue;
@@ -322,10 +321,11 @@ public class Automate {
 								if (entrees[etat]) {
 										if (matching(line.substring(m), 0, keys)) {
 											result_matching = true;
-											if (!mots.containsKey(line_number)) {
-												mots.put(line_number, new ArrayList<>());
-											}
-											mots.get(line_number).add(line);
+//											if (!mots.containsKey(line_number)) {
+//												mots.put(line_number, new ArrayList<>());
+//											}
+//											mots.get(line_number).add(line);
+											mots.put(line_number, line);
 											break;
 										}
 								}
@@ -339,7 +339,7 @@ public class Automate {
 				line = null;
 			}
 			
-			if(sortie_directe && mots.get(line_number-1).get(0).isEmpty()) {
+			if(sortie_directe && mots.get(line_number-1).isEmpty()) {
 				mots.remove(line_number-1);
 			}
 		}
@@ -347,8 +347,8 @@ public class Automate {
 
 	}
 
-	public void afficher_grep(HashMap<Integer, ArrayList<String>> results) {
-		Map<Integer, ArrayList<String>> map = new TreeMap<>(results);
+	public void afficher_grep(HashMap<Integer, String> results) {
+		Map<Integer, String> map = new TreeMap<>(results);
 		for(Integer i : map.keySet()) {
 			System.out.println("ligne "+ Integer.sum(i, 1) + " : " + map.get(i));
 		}
