@@ -1,8 +1,10 @@
 package TME2;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Matching {
@@ -16,7 +18,7 @@ public class Matching {
 				return i - facteur.length;
 			}
 
-			if (texte[i] == facteur[j]) {
+			if (i < texte.length && texte[i] == facteur[j]) {
 				i++;
 				j++;
 			} else {
@@ -80,36 +82,83 @@ public class Matching {
 
 		return result;
 	}
-
-	public static void main(String[] args) throws IOException {
+	
+	public static ArrayList<Point> findPos(String filename, char[] facteur) throws IOException{
 		
-		Matching matcher = new Matching();
-		Scanner sc = new Scanner(System.in);
 		String line = "";
-		String contenu = "";
-		
-		System.out.println("Entrez un fichier : ");
-		String filename = sc.nextLine();
+		ArrayList<Point> pos = new ArrayList<Point>();
+		int[] r = retenues(facteur);
+		int line_number = 1;
 		
 		try (BufferedReader br = new BufferedReader(new FileReader("resources/"+filename))) {
 			
 			while ((line = br.readLine()) != null) {
-				contenu += line + '\n';
+				int indice = matchingAlgo(facteur, r, line.toCharArray());
+				while(indice != -1) {
+					pos.add(new Point(line_number, indice));
+					if(indice + facteur.length < line.length()) {
+						line = line.substring(indice + facteur.length);
+						indice = matchingAlgo(facteur, r, line.toCharArray());
+					}else {
+						indice = -1;
+					}
+				}
+				
+				
+				line_number++;
 			}
 		}
+		return pos;
+	}
+	
+	public static ArrayList<String> findLines(String filename, char[] facteur) throws IOException{
+		
+		String line = "";
+		ArrayList<String> lignes = new ArrayList<String>();
+		int[] r = retenues(facteur);
+		
+		try (BufferedReader br = new BufferedReader(new FileReader("resources/"+filename))) {
+			
+			while ((line = br.readLine()) != null) {
+				if(matchingAlgo(facteur, r, line.toCharArray()) != -1) 
+					lignes.add(line);
+			}
+		}
+		return lignes;
+	}
 
+	public static void main(String[] args) throws IOException {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println("Entrez un fichier : ");
+		String filename = sc.nextLine();
+		
 		System.out.println("Entrez un mot : ");
 		char[] facteur = sc.nextLine().toCharArray();
 		
-		int[] r = matcher.retenues(facteur);
-
-		for (int i = 0; i < r.length; i++) {
-			System.out.print(r[i] + "; ");
-		}
-		
-		System.out.println();
-		System.out.println(matchingAlgo(facteur, r, contenu.toCharArray()));
-
 		sc.close();
+
+		long startTime = System.currentTimeMillis();
+		
+		/*ArrayList<Point> pos = findPos(filename, facteur);
+		
+		for(Point p : pos) {
+			System.out.println(p);
+		}*/
+		
+		ArrayList<String> lines = findLines(filename, facteur);
+		
+		for(String l : lines)
+			System.out.println(l);
+		
+		long stopTime = System.currentTimeMillis();
+	    long elapsedTime = stopTime - startTime;
+	    
+	    System.out.println();
+	    System.out.println("nb de résultats = " + lines.size());
+	    System.out.println("Temps d'éxecution : " + elapsedTime + " ms");
+
+		
 	}
 }
