@@ -37,7 +37,17 @@ public class Automate {
 		
 	}
 	
-	
+	/**
+	 * ETAPE 2
+	 * Remplit le tableau d'epsilon, de transitions, d'entrees et sorties
+	 * a partir d'un noeud de RegExTree et d'un id de noeud a donner au prochain noeud cree
+	 * 
+	 * Renvoie un tuple d'entiers representant les id des noeuds d'entree et de sortie 
+	 * crees pour ce noeud de RegExTree
+	 * @param t
+	 * @param id
+	 * @return
+	 */
 	public int[] remplir2(RegExTree t, int id) {
 		int[] id_gauche;
 		int[] id_droite;
@@ -137,7 +147,11 @@ public class Automate {
 
 	}
 	
-	
+	/**
+	 * Detecte s'il existe un noeud entrant qui possede un espilon-transition
+	 * vers un noeud sortant
+	 * -> Gerer le cas .*
+	 */
 	public void setSortieDirecte() {
 		for (int i=0; i<entrees.length; i++) {
 			if(entrees[i]) {
@@ -153,6 +167,9 @@ public class Automate {
 
 	
 
+	/**
+	 * Affichage textuel
+	 */
 	public void afficher() {
 
 		System.out.println("**********transitions***********");
@@ -182,6 +199,10 @@ public class Automate {
 		}
 	}
 
+	/**
+	 * ETAPE 3
+	 * Determinise l'automate en regroupant les etats en groupes d'etats
+	 */
 	public void determiniser() {
 		int debut = 0;
 
@@ -236,6 +257,12 @@ public class Automate {
 		} while (!new_keys.isEmpty());
 	}
 	
+	/**
+	 * Renvoie tous les epsilon-transitions possibles qu'on peut obtenir
+	 * a partir d'un certain noeud 
+	 * @param e
+	 * @return
+	 */
 	public Set<Integer> cherche_espilon(int e) {
 		Set<Integer> voisins_direct = new HashSet<>();
 		Set<Integer> voisins_lointains = new HashSet<>();
@@ -255,6 +282,9 @@ public class Automate {
 		return voisins_direct;
 	}
 
+	/**
+	 * Affichage textuel
+	 */
 	public void afficher_determinisation() {
 		for (Set<Integer> keys : etats.keySet()) {
 			for (Iterator<Integer> it = keys.iterator(); it.hasNext();) {
@@ -273,6 +303,13 @@ public class Automate {
 		}
 	}
 
+	/**
+	 * Entre le mot fourni dans l'automate et renvoie vrai si celui-ci match
+	 * @param mot
+	 * @param index
+	 * @param key_etat
+	 * @return
+	 */
 	public boolean matching(String mot, int index, Set<Integer> key_etat) {
 		
 		for (Iterator<Integer> it = key_etat.iterator(); it.hasNext();) {
@@ -292,6 +329,14 @@ public class Automate {
 		return false;
 	}
 
+	/**
+	 * Lit un fichier et applique l'automate sur chaque ligne de celui-ci
+	 * Renvoie les lignes et leur numero qui contiennent un motif qui match
+	 * @param filename
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public HashMap<Integer, String> custom_grep(String filename) throws FileNotFoundException, IOException {
 
 		HashMap<Integer, String> mots = new HashMap<Integer, String>();
@@ -321,10 +366,6 @@ public class Automate {
 								if (entrees[etat]) {
 										if (matching(line.substring(m), 0, keys)) {
 											result_matching = true;
-//											if (!mots.containsKey(line_number)) {
-//												mots.put(line_number, new ArrayList<>());
-//											}
-//											mots.get(line_number).add(line);
 											mots.put(line_number, line);
 											break;
 										}
@@ -347,6 +388,10 @@ public class Automate {
 
 	}
 
+	/**
+	 * Affichage textuel
+	 * @param results
+	 */
 	public void afficher_grep(HashMap<Integer, String> results) {
 		Map<Integer, String> map = new TreeMap<>(results);
 		for(Integer i : map.keySet()) {

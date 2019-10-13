@@ -9,6 +9,13 @@ import java.util.Scanner;
 
 public class Matching {
 
+	/**
+	 * A l'aide de la retenue, cherche la premiere occurence du facteur dans un texte
+	 * @param facteur
+	 * @param retenue
+	 * @param texte
+	 * @return
+	 */
 	public static int matchingAlgo(char[] facteur, int[] retenue, char[] texte) {
 		int i = 0;
 		int j = 0;
@@ -34,6 +41,9 @@ public class Matching {
 		return -1;
 	}
 
+	/**
+	 * Renvoie la retenue d'un facteur
+	 */
 	public static int[] retenues(char[] facteur) {
 		int[] result = new int[facteur.length + 1];
 
@@ -83,6 +93,13 @@ public class Matching {
 		return result;
 	}
 	
+	/**
+	 * Renvoie les positions dans le fichier donne en argument les occurences du facteur
+	 * @param filename
+	 * @param facteur
+	 * @return
+	 * @throws IOException
+	 */
 	public static ArrayList<Point> findPos(String filename, char[] facteur) throws IOException{
 		
 		String line = "";
@@ -111,6 +128,13 @@ public class Matching {
 		return pos;
 	}
 	
+	/**
+	 * Renvoie les lignes du fichier donne en argument qui match le facteur
+	 * @param filename
+	 * @param facteur
+	 * @return
+	 * @throws IOException
+	 */
 	public static ArrayList<String> findLines(String filename, char[] facteur) throws IOException{
 		
 		String line = "";
@@ -140,12 +164,6 @@ public class Matching {
 		sc.close();
 
 		long startTime = System.currentTimeMillis();
-		
-		/*ArrayList<Point> pos = findPos(filename, facteur);
-		
-		for(Point p : pos) {
-			System.out.println(p);
-		}*/
 		
 		ArrayList<String> lines = findLines(filename, facteur);
 		

@@ -22,6 +22,26 @@ public class Indexing {
 	public HashMap<String, ArrayList<Point>> sorted_mots = new LinkedHashMap<String, ArrayList<Point>>();
 	public String[] file_lines;
 
+	/**
+	 * Lit un fichier et fait un indexing dans un nouveau fichier
+	 * Les mots sont classes par ordre croissant par leur nombre d'occurences dans le fichier de base
+	 * et est aussi ecrit la position de toutes leurs occurences
+	 * 
+	 *  Exemple : 
+	 *  
+	 *  texte.txt : 
+	 *  Voiture conducteur
+	 *  conducteur
+	 *  
+	 *  -> 
+	 *  index_table-texte.txt :
+	 *  Voiture : 0,0 
+	 *  conducteur : 0,8 1,0
+	 *  
+	 * @param filename
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public void read(String filename) throws FileNotFoundException, IOException {
 		String line = "";
 		ArrayList<String> lines = new ArrayList<String>();
@@ -66,8 +86,8 @@ public class Indexing {
 			
 			for (String key : sorted_mots.keySet()) {
 
-				// les mots qui apparaissent plus de 10000 sont exclus.
-				if (sorted_mots.get(key).size() > 100000000)
+				// les mots qui apparaissent plus de 1000 fois sont exclus.
+				if (sorted_mots.get(key).size() > 1000)
 					break;
 				bw.write(key + " : ");
 				for (Point p : sorted_mots.get(key)) {
@@ -106,6 +126,13 @@ public class Indexing {
 		return sorted_mots;
 	}
 	
+	/**
+	 * Retroune toutes les lignes du fichier dont le numero de ligne
+	 * correspond aux pos de la liste positions
+	 * @param positions
+	 * @return
+	 * @throws IOException
+	 */
 	public String[] getLines(ArrayList<Point> positions) throws IOException{
 		String[] lines = new String[positions.size()];
 		for (int i=0; i<positions.size(); i++)

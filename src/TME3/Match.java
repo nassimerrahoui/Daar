@@ -2,6 +2,13 @@ package TME3;
 
 public class Match {
 
+	/**
+	 * A l'aide de la retenue, cherche la premiere occurence du facteur dans un texte
+	 * @param facteur
+	 * @param retenue
+	 * @param texte
+	 * @return
+	 */
 	public static int matchingAlgo(char[] facteur, int[] retenue, char[] texte) {
 		int i = 0;
 		int j = 0;
@@ -27,6 +34,10 @@ public class Match {
 		return -1;
 	}
 
+	
+	/**
+	 * Renvoie la retenue d'un facteur
+	 */
 	public static int[] retenues(char[] facteur) {
 		int[] result = new int[facteur.length + 1];
 

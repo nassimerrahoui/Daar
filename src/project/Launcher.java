@@ -13,6 +13,13 @@ import TME3.RadixTree;
 
 public class Launcher {
 
+	/**
+	 * Verifie s'il existe des operations de RegEx (hormis la concatenantion)
+	 * et renvoie true si c'est le cas
+	 * -> Utilser la methode adaptee : Automate ou KMP + RadixTree
+	 * @param motif
+	 * @return
+	 */
 	public static boolean isRegex(String motif) {
 		char c_precedent = ' ';
 		for (char c : motif.toCharArray()) {
@@ -27,6 +34,11 @@ public class Launcher {
 		return false;
 	}
 
+	/**
+	 * Lance la methode 1 : Automate
+	 * @param motif
+	 * @param filename
+	 */
 	public static void automateMethod(String motif, String filename) {
 		try {
 			long startTime = System.currentTimeMillis();
@@ -52,6 +64,14 @@ public class Launcher {
 		}
 	}
 
+	/**
+	 * Lance la methode 2 : KMP + Radix Tree
+	 * @param motif
+	 * @param filename
+	 * @param sc
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public static void radixTreeMethod(String motif, String filename, Scanner sc)
 			throws FileNotFoundException, IOException {
 

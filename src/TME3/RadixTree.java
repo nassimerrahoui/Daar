@@ -17,7 +17,7 @@ public class RadixTree {
 	/** Constructeur par defaut **/
 	public RadixTree() {}
 	
-	/** Construction a partir d'un index **/
+	/** Construction a partir d'un fichier d'indexage **/
 	public RadixTree(String indexfilename) throws IOException {
 		String line = "";
 
@@ -47,6 +47,11 @@ public class RadixTree {
 		}
 	}
 
+	/**
+	 * Ajoute un mot au RadixTree
+	 * @param mot
+	 * @param pos
+	 */
 	public void addRadixTree(String mot, ArrayList<Point> pos) {
 		boolean creer_fils = true;
 		String k = "";
@@ -139,6 +144,11 @@ public class RadixTree {
 
 	}
 
+	/**
+	 * Affichage textuel
+	 * @param prefix
+	 * @param profondeur
+	 */
 	public void affichage(String prefix, int profondeur) {
 		for (String key : fils.keySet()) {
 			if (fils.get(key).isWord) {
@@ -152,10 +162,23 @@ public class RadixTree {
 		}
 	}
 	
+	/**
+	 * Affichage textuel
+	 * @param prefix
+	 * @param profondeur
+	 */
 	public void affichage() {
 		affichage("", 0);
 	}
 
+	/**
+	 *  Recherche un mot dans le radixTree et renvoie sa liste de positions des occurences
+	 *  Si le mot n'existe pas, renvoie une liste vide
+	 * @param mot
+	 * @param suffixe
+	 * @param temoin
+	 * @return
+	 */
 	public ArrayList<Point> searchMotif(String mot, String suffixe, String temoin) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		boolean trouve = false;
