@@ -108,7 +108,7 @@ public class Launcher {
 			}
 
 			System.out.println(" >> Veuillez entrer un motif : ");
-			System.out.println(" >> (Si le motif est un mot vous accéderai au radix tree sinon ce sera l'automate.)");
+			System.out.println(" >> (Si le motif est un mot vous accederai au radix tree sinon ce sera l'automate.)");
 			String motif = sc.nextLine();
 
 			if (isRegex(motif))
