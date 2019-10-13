@@ -18,7 +18,8 @@ public class Launcher {
 		
 		try {
 			System.out.println("Debut indexing...");
-			Indexing.read("resources/" + filename);
+			Indexing index = new Indexing();
+			index.read("resources/" + filename);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

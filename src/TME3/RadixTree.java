@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class RadixTree {
 
@@ -41,8 +40,10 @@ public class RadixTree {
 						pos.add(new Point(Integer.parseInt(coord[0]), Integer.parseInt(coord[1])));
 				}
 				
-				addRadixTree(ligne[0], pos);
+				addRadixTree(ligne[0], pos);	
 			}
+			
+			br.close();
 		}
 	}
 
@@ -51,13 +52,13 @@ public class RadixTree {
 		String k = "";
 		String cle = "";
 		String suffixe = "";
-
+		
 		for (String key : fils.keySet()) {
 			char[] lettres = key.toCharArray();
 			char[] prefixes = mot.toCharArray();
 
 			int bon_char = 0;
-
+			
 			if (mot.equals(key)) {
 				fils.get(key).isWord = true;
 				fils.get(key).occurences = pos;
@@ -65,13 +66,16 @@ public class RadixTree {
 			}
 
 			for (int i = 0; i < lettres.length; i++) {
+				
 				if (i >= mot.length())
 					break;
 
-				if (prefixes[i] == lettres[i])
+				if (prefixes[i] == lettres[i]) {
 					bon_char++;
-
-				if (prefixes[i] != lettres[i] && bon_char > 0) {
+					
+					if(bon_char == prefixes.length)
+						break;
+				}else if (prefixes[i] != lettres[i] && bon_char > 0) {
 					
 					RadixTree t = new RadixTree();
 					t.isWord = false;
@@ -89,13 +93,14 @@ public class RadixTree {
 					t.fils.put(mot.substring(bon_char), v);
 					
 					fils.put(key.substring(0, bon_char), t);
-					//fils.get(key.substring(0, bon_char)).isWord = false;
 					
 					k = mot.substring(bon_char);
 					cle = key.substring(0, bon_char);
 					fils.remove(key);
 					creer_fils = false;
 					return;
+				}else {
+					break;
 				}
 
 			}
@@ -112,7 +117,7 @@ public class RadixTree {
 				t.occurences = pos;
 				t.isWord = isWord;
 
-				fils.put(key.substring(0, mot.length()), t);
+				fils.put(mot, t);
 				t.fils.put(suffixe2, fils.get(key));
 				fils.remove(key);
 
@@ -136,7 +141,7 @@ public class RadixTree {
 	public void affichage(String prefix, int profondeur) {
 		for (String key : fils.keySet()) {
 			if (fils.get(key).isWord) {
-				System.out.print(prefix + key + " : " + profondeur + " | ");
+				System.out.print(prefix + "("+key + ") : " + profondeur + " | ");
 				for (Point p : fils.get(key).occurences)
 					System.out.print(p + " ");
 				System.out.println();
@@ -153,20 +158,13 @@ public class RadixTree {
 	public ArrayList<Point> searchMotif(String mot, String suffixe, String temoin) {
 		ArrayList<Point> points = new ArrayList<Point>();
 		boolean trouve = false;
-
-		if (suffixe == "") {
-			temoin = "";
-			suffixe = mot;
-		}
-		
-		if (Objects.equals(temoin, mot) && isWord) {
-			trouve = true;
-			points = occurences;
-		}
-
-		System.out.println(temoin + " : " + suffixe);
 		
 		for (String key : fils.keySet()) {
+			
+			if((temoin+key).equals(mot)) {
+				return fils.get(key).occurences;
+			}
+			
 			if (key.length() <= suffixe.length()) {
 				char[] key_array = key.toCharArray();
 				char[] suffixe_array = suffixe.toCharArray();
@@ -178,6 +176,7 @@ public class RadixTree {
 					}
 					
 					if (bon_char == key_array.length) {
+						trouve = true;
 						temoin += suffixe.substring(0, key_array.length);
 						suffixe = suffixe.substring(key_array.length);
 						points = (fils.get(key).searchMotif(mot, suffixe, temoin));
@@ -188,81 +187,12 @@ public class RadixTree {
 					break;
 			}
 		}
-		System.out.println(occurences);
-		System.out.println(points);
-		return occurences;
+		return points;
 	}
 	
 	public ArrayList<Point> searchMotif(String mot){
-		return searchMotif(mot, "", "");
+		return searchMotif(mot, mot, "");
 	}
-
-	public static void main(String[] args) {
-		
-		/*
-		ArrayList<Point> ligne0 = new ArrayList<Point>();
-		ligne0.add(new Point(0,5));
-		ligne0.add(new Point(0,7));
-		ligne0.add(new Point(0,10));
-		
-		ArrayList<Point> ligne1 = new ArrayList<Point>();
-		ligne1.add(new Point(1,2));
-		ligne1.add(new Point(1,6));
-		ligne1.add(new Point(1,14));
-		
-		ArrayList<Point> ligne2 = new ArrayList<Point>();
-		ligne2.add(new Point(2,3));
-		ligne2.add(new Point(2,9));
-		ligne2.add(new Point(2,20));
-		
-		ArrayList<Point> ligne3 = new ArrayList<Point>();
-		ligne3.add(new Point(3,30));
-		ligne3.add(new Point(3,34));
-		ligne3.add(new Point(3,39));
-		
-		ArrayList<Point> ligne4 = new ArrayList<Point>();
-		ligne4.add(new Point(4,45));
-		ligne4.add(new Point(4,41));
-		ligne4.add(new Point(4,46));
-		
-		ArrayList<Point> ligne5 = new ArrayList<Point>();
-		ligne5.add(new Point(5,55));
-		ligne5.add(new Point(5,51));
-		ligne5.add(new Point(5,56));
-		
-		
-		RadixTree t = new RadixTree();
-		t.addRadixTree("RATATA", ligne0);
-		t.addRadixTree("RAT", ligne4);
-		t.addRadixTree("RAA", ligne3);
-		t.addRadixTree("RAA", ligne3);
-		t.addRadixTree("RA", ligne1);
-		t.addRadixTree("R", ligne2);
-		t.addRadixTree("T", ligne5);
-		
-		t.affichage("", 0);
-		*/
-		
-
-//		RadixTree r = new RadixTree();
-//		r.addRadixTree("RATON", ligne4);
-//		r.addRadixTree("RATIR", ligne3);
-//		r.addRadixTree("RA", ligne0);
-//		r.affichage("", 0);
-
-//		RadixTree o = new RadixTree();
-//		o.addRadixTree("RA", ligne0);
-//		o.addRadixTree("R", ligne2);
-//		o.addRadixTree("T", ligne1);
-//		o.affichage("", 0);
-
-//		System.out.println();
-//		String mot = "RA";
-//		boolean present = o.searchMotif(mot, "", "");
-//		if (present)
-//			System.out.println(mot + " est present");
-//		else
-//			System.out.println(mot + " est non present");
-	}
+	
 
 }

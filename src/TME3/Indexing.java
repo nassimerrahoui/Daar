@@ -15,36 +15,24 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Indexing {
 
-	public static HashMap<String, ArrayList<Point>> mots = new HashMap<>();
-	public static HashMap<String, ArrayList<Point>> sorted_mots = new LinkedHashMap<String, ArrayList<Point>>();
+	public HashMap<String, ArrayList<Point>> mots = new HashMap<>();
+	public HashMap<String, ArrayList<Point>> sorted_mots = new LinkedHashMap<String, ArrayList<Point>>();
+	public String[] file_lines;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		System.out.println(" >> Please enter a filename from resources file : ");
-		String filename = sc.next();
-		sc.close();
-		try {
-			read(filename);
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Fin indexing...");
-	}
-
-	public static void read(String filename) throws FileNotFoundException, IOException {
+	public void read(String filename) throws FileNotFoundException, IOException {
 		String line = "";
+		ArrayList<String> lines = new ArrayList<String>();
 
 		int line_number = 0;
 
 		try (BufferedReader br = new BufferedReader(new FileReader("resources/" +filename))) {
+			
 			while ((line = br.readLine()) != null) {
+				lines.add(line);
+				
 				if (line.isEmpty()) {
 					line_number++;
 					continue;
@@ -58,7 +46,6 @@ public class Indexing {
 					for (int j = 0; j < word_line[i].length(); j++) {
 						line = line.substring(0, j + n) + ' ' + line.substring(j + n + 1);
 					}
-					// System.out.println(word_line[i] + " : "+n);
 
 					if (mots.containsKey(word_line[i])) {
 						mots.get(word_line[i]).add(new Point(line_number, n));
@@ -70,27 +57,8 @@ public class Indexing {
 				}
 				line_number++;
 			}
-
-			// DEBUG MODE
-
-			// System.out.println("*************** Map non trie **************");
-			// for (String key : mots.keySet()) {
-			// System.out.print(key + " : ");
-			// for (Point p : mots.get(key)) {
-			// System.out.print(p + "| ");
-			// }
-			// System.out.println();
-			// }
-			//
-			// System.out.println("*************** Map trie **************");
-			// sorted_mots = sortByFrequence(mots);
-			// for (String key : sorted_mots.keySet()) {
-			// System.out.print(key + " : ");
-			// for (Point p : sorted_mots.get(key)) {
-			// System.out.print(p + "| ");
-			// }
-			// System.out.println();
-			// }
+			
+			file_lines = lines.toArray(new String[0]);
 			
 			FileWriter w = new FileWriter("result/index_table-"+ filename);
 			BufferedWriter bw = new BufferedWriter(w);
@@ -99,7 +67,7 @@ public class Indexing {
 			for (String key : sorted_mots.keySet()) {
 
 				// les mots qui apparaissent plus de 100 sont exclus.
-				if (sorted_mots.get(key).size() > 100)
+				if (sorted_mots.get(key).size() > 10000)
 					break;
 				bw.write(key + " : ");
 				for (Point p : sorted_mots.get(key)) {
@@ -113,7 +81,7 @@ public class Indexing {
 	}
 
 	/** Trier hashmap index des mots **/
-	public static HashMap<String, ArrayList<Point>> sortByFrequence(HashMap<String, ArrayList<Point>> mots) {
+	public HashMap<String, ArrayList<Point>> sortByFrequence(HashMap<String, ArrayList<Point>> mots) {
 
 		List<Map.Entry<String, ArrayList<Point>>> list = new LinkedList<Map.Entry<String, ArrayList<Point>>>(
 				mots.entrySet());
@@ -136,5 +104,14 @@ public class Indexing {
 		}
 		mots.clear();
 		return sorted_mots;
+	}
+	
+	public String[] getLines(ArrayList<Point> positions) throws IOException{
+		String[] lines = new String[positions.size()];
+		for (int i=0; i<positions.size(); i++)
+			lines[i] = file_lines[positions.get(i).x];
+		
+		return lines;
+		
 	}
 }
