@@ -1,8 +1,10 @@
-package TME3;
+package project;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
+
+import TME3.Indexing;
 
 public class Launcher {
 
