@@ -75,6 +75,7 @@ public class RadixTree {
 					
 					if(bon_char == prefixes.length)
 						break;
+				
 				}else if (prefixes[i] != lettres[i] && bon_char > 0) {
 					
 					RadixTree t = new RadixTree();

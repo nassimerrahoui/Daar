@@ -14,40 +14,48 @@ public class Test {
 			Scanner sc = new Scanner(System.in);
 			System.out.println(" >> Please enter a filename from resources file : ");
 			String filename = sc.next();
-			sc.close();
+			
 			try {
 				index.read(filename);
-				System.out.println("Fin indexing...");
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			System.out.println("Fin indexing...");
+			
+			String mot = "";
+			
+			while(true) {
+				try {
+					System.out.println(" >> Please enter a word to look for (STOPEND to stop) : ");
+					mot = sc.next();
+					
+					if(mot.equals("STOPEND"))
+						break;
+					
+					RadixTree t = new RadixTree("result/index_table-"+filename);
+					
+					long startTime = System.currentTimeMillis();
+					
+					ArrayList<Point> positions = t.searchMotif(mot);
+					
+					for(String line : index.getLines(positions)) 
+						System.out.println(line);
+					
+					
+					long stopTime = System.currentTimeMillis();
+				    long elapsedTime = stopTime - startTime;
+				    
+				    
+				    System.out.println("Temps d'execution : " + elapsedTime + " ms");
 				
-				RadixTree t = new RadixTree("result/index_table-"+filename);
-				long startTime = System.currentTimeMillis();
-				
-				ArrayList<Point> positions = t.searchMotif("Sargon");
-				
-				for(String line : index.getLines(positions)) 
-					System.out.println(line);
-				
-				
-				long stopTime = System.currentTimeMillis();
-			    long elapsedTime = stopTime - startTime;
-			    
-			    
-			    System.out.println("Temps d'execution : " + elapsedTime + " ms");
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			
-			
-			
-			
-			
-			//t.getLines(positions);
-			/*for(String line : t.getLines(positions)) {
-				System.out.println(line);
-			}*/
-			
+			sc.close();
 		
 	}
 		

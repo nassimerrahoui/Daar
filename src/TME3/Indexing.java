@@ -66,8 +66,8 @@ public class Indexing {
 			
 			for (String key : sorted_mots.keySet()) {
 
-				// les mots qui apparaissent plus de 100 sont exclus.
-				if (sorted_mots.get(key).size() > 10000)
+				// les mots qui apparaissent plus de 10000 sont exclus.
+				if (sorted_mots.get(key).size() > 100000000)
 					break;
 				bw.write(key + " : ");
 				for (Point p : sorted_mots.get(key)) {
