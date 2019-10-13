@@ -235,7 +235,7 @@ public class Automate {
 
 		} while (!new_keys.isEmpty());
 	}
-
+	
 	public Set<Integer> cherche_espilon(int e) {
 		Set<Integer> voisins_direct = new HashSet<>();
 		Set<Integer> voisins_lointains = new HashSet<>();
