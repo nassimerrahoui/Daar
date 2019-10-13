@@ -10,12 +10,12 @@
 		<mkdir dir="${build}" />
 	</target>
 
-	<target name="compile" depends="init" description="Compile les fichiers dans src">
+	<target name="compile" depends="init" description="Compilation">
 		<javac debug="true" classpath="${build}/:jars/*" srcdir="${src}" excludes="" destdir="${build}" />
 	</target>
 
 	<target name="input-runargs" unless="args">
-		<input addProperty="args" message="Entrez le motif recherché et le texte séparé d'un espace" />
+		<input addProperty="args" message="Entrez le motif recherché puis le nom du fichier precede d'un espace" />
 	</target>
 
 	<target name="run" depends="compile, input-runargs">
@@ -28,7 +28,6 @@
 	<target name="clean" description="Nettoie les fichiers">
 		<echo>================ Removing temporary files... ================</echo>
 		<delete verbose="true">
-			<!-- Remove all *~ files -->
 			<fileset dir="${basedir}" defaultexcludes="no">
 				<include name="**/*~" />
 			</fileset>

@@ -1,3 +1,3 @@
 Pour pouvoir lancer le code : 
-lancez le build.xml (compile et run) et entrez un motif a chercher avec 
-un nom de fichier existant dans le dossier resources 
+- Lancez le build.xml (compile et run) 
+- Entrez dans le champ, un motif a chercher avec un nom de fichier existant dans le dossier resources 

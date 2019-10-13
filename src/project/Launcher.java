@@ -72,43 +72,28 @@ public class Launcher {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void radixTreeMethod(String motif, String filename, Scanner sc)
+	public static void radixTreeMethod(String motif, String filename)
 			throws FileNotFoundException, IOException {
 
 		Indexing index = new Indexing();
 		System.out.println("Indexing...");
 		index.read(filename);
 
-		while (true) {
-			try {
-				System.out.println(" >> Please enter a word to look for (STOPEND to stop) : ");
+		RadixTree t = new RadixTree("result/index_table-" + filename);
 
-				if (motif == "")
-					motif = sc.nextLine();
+		long startTime = System.currentTimeMillis();
 
-				if (motif.equals("STOPEND"))
-					break;
+		ArrayList<Point> positions = t.searchMotif(motif);
 
-				RadixTree t = new RadixTree("result/index_table-" + filename);
+		for (String line : index.getLines(positions))
+			System.out.println(line);
 
-				long startTime = System.currentTimeMillis();
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
 
-				ArrayList<Point> positions = t.searchMotif(motif);
+		System.out.println("Temps d'execution : " + elapsedTime + " ms");
 
-				for (String line : index.getLines(positions))
-					System.out.println(line);
-
-				long stopTime = System.currentTimeMillis();
-				long elapsedTime = stopTime - startTime;
-
-				System.out.println("Temps d'execution : " + elapsedTime + " ms");
-
-				motif = "";
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+			
 	}
 
 	public static void main(String[] args) {
@@ -116,30 +101,18 @@ public class Launcher {
 		/** Cette classe permet de faire les tests sur la base Gutenberg **/
 
 		System.out.println("***** Bienvenue sur EGREP CUSTOM ******");
-		Scanner sc = new Scanner(System.in);
-		while (true) {
-			System.out.println();
-			System.out.println(" >> Veuillez entrer le nom du fichier (depose au prealable dans resources): ");
-			String filename = sc.nextLine();
-
-			if (filename.equals("STOPEND")) {
-				sc.close();
-				break;
+		
+		String filename = args[1];
+		String motif = args[0];
+		
+		if (isRegex(motif))
+			automateMethod(motif, filename);
+		else
+			try {
+				radixTreeMethod(motif, filename);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			System.out.println(" >> Veuillez entrer un motif : ");
-			System.out.println(" >> (Si le motif est un mot vous accederai au radix tree sinon ce sera l'automate.)");
-			String motif = sc.nextLine();
-
-			if (isRegex(motif))
-				automateMethod(motif, filename);
-			else
-				try {
-					radixTreeMethod(motif, filename, sc);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
 	}
 
 }
