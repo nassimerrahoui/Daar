@@ -1,9 +1,8 @@
 package TME1;
 
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.lang.Exception;
+import java.util.Scanner;
 
 public class RegEx {
 	// MACROS
